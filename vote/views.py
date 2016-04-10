@@ -27,7 +27,7 @@ election_choices += ( (0,"All Future Elections"),)
 
 
 
-years = range(1900,1999)[::-1]
+years = range(1900,2001)[::-1] #2001 minus 16 years + 1 for scotland
 
 year_widget = SelectDateWidget(years=years)
 

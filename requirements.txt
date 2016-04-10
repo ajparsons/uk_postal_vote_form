@@ -1,0 +1,5 @@
+django-jsignature
+markdown
+django-htmlmin
+reportlab
+pyPdf

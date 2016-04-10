@@ -2,6 +2,7 @@
 '''
 Helpful django things
 
+will be tidied up into it's own project at some point
 
 '''
 
