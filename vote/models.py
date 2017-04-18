@@ -2,13 +2,16 @@
 
 
 from django.db import models
-from tools.django_tools import EasyBulkModel,StockModelHelpers
+from django.db.models import F
+from useful_inkleby.useful_django.models import FlexiBulkModel
 from tools.ql import QuickList
+
+from useful_inkleby.files import QuickGrid
 from oscodepoint import open_codepoint
 import datetime
-from django.db.models import F
+import json
 
-class Election(EasyBulkModel, StockModelHelpers):
+class Election(FlexiBulkModel):
     name = models.CharField(max_length=255, default="", blank=True)
     date = models.DateField()
     cut_off_date = models.DateField(null=True,blank=True)
@@ -39,10 +42,12 @@ class Election(EasyBulkModel, StockModelHelpers):
         Election.objects.get_or_create(name="May Elections 2016",
                                        date= datetime.date(2016,05,05))
         Election.objects.get_or_create(name="EU Referendum (June) 2016",
-                                       date= datetime.date(2016,06,23))      
+                                       date= datetime.date(2016,06,23))
+        Election.objects.get_or_create(name="June General Election 2017",
+                                       date= datetime.date(2017,6,8))     
         
 
-class Council(EasyBulkModel, StockModelHelpers):
+class Council(FlexiBulkModel):
     name = models.CharField(max_length=255, default="", blank=True)
     website = models.CharField(max_length=255, default="", blank=True)
     postcode = models.CharField(max_length=9, default="", blank=True)
@@ -80,9 +85,11 @@ class Council(EasyBulkModel, StockModelHelpers):
         source : 
         
         """
-        ql = QuickList().open('resources//ERO_addresses.csv')
-        
-        for r in ql:
+
+        with open('..//resources//councils.json') as data_file:    
+            data = json.load(data_file)
+        Council.objects.all().delete()
+        for r in data:
             Council(name=r["name"],
                     website = r["website"],
                     postcode = r["postcode"],
@@ -92,11 +99,11 @@ class Council(EasyBulkModel, StockModelHelpers):
                     address = r["address"]
                     ).queue()
             
-        Council.do_queue()
+        Council.save_queue()
         
     
 
-class Postcode(EasyBulkModel, StockModelHelpers):
+class Postcode(FlexiBulkModel):
     """
     stores reduced vesion of OS code point
      open for council and postcode connection
@@ -105,6 +112,22 @@ class Postcode(EasyBulkModel, StockModelHelpers):
         max_length=7, blank=True, db_index=True)  # lower and spaces removed
     council = models.ForeignKey(
         Council, null=True, blank=True, related_name="postcode_refs")
+    multi_council = models.IntegerField(default=0)
+
+    @classmethod
+    def is_multi(cls,postcode):
+        """
+        given a postcode - try and get the local council
+        """
+        def reduce(txt):
+            return txt.lower().strip().replace(" ", "")
+        
+        r_postcode = reduce(postcode)
+        
+        try:
+            return Postcode.objects.get(postcode=r_postcode).multi_council
+        except Postcode.DoesNotExist:
+            return None
 
     @classmethod
     def populate(cls,delete_current=False):
@@ -112,10 +135,18 @@ class Postcode(EasyBulkModel, StockModelHelpers):
         if delete_current:
             print "deleted {0}".format(cls.objects.all().delete())
         
-        codepoint = open_codepoint('resources/codepo_gb.zip')
-    
         def reduce(txt):
             return txt.lower().strip().replace(" ", "")
+        
+        codepoint = open_codepoint('..//resources//codepo_gb.zip')
+        split = QuickGrid().open('..//resources/split-postcodes.csv')
+        
+        split_lookup = {reduce(x["postcode"]):int(x["authorities"]) for x in split}
+        
+    
+        Postcode.objects.all().delete()
+    
+
     
         total = codepoint.metadata['total_count']
         print "{0} total".format(total)
@@ -130,9 +161,12 @@ class Postcode(EasyBulkModel, StockModelHelpers):
                 council = None
                 print "{0} doesn't exist in our councils".format(entry['Admin_district_code'])
     
-            Postcode(postcode=reduce(entry['Postcode']),
-                     council_id=council).queue()
+            code = reduce(entry['Postcode'])
+            multi = split_lookup.get(code,1)
+            Postcode(postcode=code,
+                     council_id=council,
+                     multi_council=multi).queue()
                      
-        Postcode.do_queue()
+        Postcode.save_queue(5000)
                      
 

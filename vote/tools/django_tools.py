@@ -21,9 +21,6 @@ from markdown import markdown
 from htmlmin.minify import html_minify
 import io
 
-
-
-
 class RequestMock(RequestFactory):  
     def request(self, **request):
         #https://gist.github.com/tschellenbach/925270

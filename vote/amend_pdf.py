@@ -8,6 +8,7 @@ import os
 from django.http import HttpResponse
 from django.conf import settings
 
+
 def write_date(draw,x,y,date,increment=14,extra_spacing=[]):
     date_format = date.strftime("%d%m%Y")
     for i,d in enumerate(date_format):
@@ -21,7 +22,7 @@ def file_name_safe(filename):
     keepcharacters = (' ','.','_')
     return "".join(c for c in filename if c.isalnum() or c in keepcharacters).rstrip()
     
-def create_front_page(council,postcode):
+def create_front_page(council,postcode,multi_council=1):
     """
     information page
     """
@@ -44,9 +45,14 @@ def create_front_page(council,postcode):
         
         
         ba("From your postcode ({0}) we think you live in:".format(postcode))
-           
+        ba("")
         ba(council.name)
         ba("")
+        
+        if multi_council > 1:
+            ba("BE CAREFUL: Your postcode covers multiple councils. Please check this is correct.")
+            ba("")
+            
         ba("If this is right - you need to sign the form on the next page and send it to:")
         
         ba("")
@@ -113,8 +119,8 @@ def create_pdf(form=None,sig_image=None):
     file_name = file_name_safe("{0}_{1}".format(surname,firstnames).lower())
     
     council = get_from_form("council")
+    multi_council = get_from_form("multi_council")
     
-
     if city and county:
         add3 = city + ", " + county
     elif city:
@@ -184,7 +190,7 @@ def create_pdf(form=None,sig_image=None):
     new_pdf = PdfFileReader(packet)
     # read existing PDF
     
-    front_page = create_front_page(council, postcode)
+    front_page = create_front_page(council, postcode, multi_council)
     
     source_file = os.path.join( settings.PROJECT_PATH,
                                 "resources",

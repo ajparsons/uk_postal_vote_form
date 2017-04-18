@@ -14,9 +14,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "proj.settings")
 django.setup()
 
 from vote.models import Council, Postcode, Election
+from django.contrib.auth.models import User
 
-
-if __name__ == "__main__":
+def populate():
     Council.populate()
     Postcode.populate()
     Election.populate()
+
+
+if __name__ == "__main__":
+    #print Postcode.is_multi("AL4 0QR")
+    populate()

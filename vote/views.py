@@ -1,5 +1,6 @@
 
-from tools.django_tools import  BakeView
+
+from useful_inkleby.useful_django.views import IntegratedURLView
 from django import forms
 import datetime
 from models import Election, Council, Postcode
@@ -9,9 +10,6 @@ from amend_pdf import create_pdf
 from jsignature.forms import JSignatureField
 from jsignature.utils import draw_signature
 from jsignature.widgets import JSignatureWidget
-
-LocalBake = BakeView.local()
-
 
 valid_elections = Election.valid_elections()
 
@@ -64,6 +62,7 @@ class AddressForm(forms.Form):
         postcode = cd.get('postcode')
         if postcode:
             cd['council'] = Council.from_postcode(postcode)
+            cd['multi_council'] = Postcode.is_multi(postcode)
 
 
 class AltAddressForm(forms.Form):
@@ -100,7 +99,7 @@ class SignatureForm(forms.Form):
 """
 
 
-class HomeView(LocalBake):
+class HomeView(IntegratedURLView):
     """
     front page view
     """
