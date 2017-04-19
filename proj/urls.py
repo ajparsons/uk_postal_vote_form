@@ -1,11 +1,8 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
-from vote import views
-
-from useful_inkleby.useful_django.views import AppUrl
+from postalvote import views
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),    
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^', views.postal_vote_form_view),   	
         ]
-
-urlpatterns += AppUrl('vote.views').patterns()

@@ -6,6 +6,7 @@ configlocal.py
 .project
 .pydevproject
 fabfile.py
+_env/
 
 #################
 ## Eclipse

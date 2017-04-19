@@ -1,5 +1,9 @@
-django-jsignature
+"django>=1.8.5"
+useful_inkleby==0.3
 markdown
 django-htmlmin
 reportlab
-pyPdf
+pyPdf2
+oscodepoint
+django-bootstrap-form
+unicodecsv

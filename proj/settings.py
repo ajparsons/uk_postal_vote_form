@@ -19,10 +19,12 @@ else:
     SITE_ROOT= "http://postalvote.inkleby.com"
     DEBUG = False
     IS_LIVE = True
-    
+
+USE_L10N  = False
+DATE_FORMAT = 'j N, Y'
 
 
-from config import * #stores database and key outside repo
+from .config import * #stores database and key outside repo
 
 
 ALLOWED_HOSTS = ["127.0.0.1","testserver","postalvote.inkleby.com"]
@@ -67,10 +69,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vote',
+    'postalvote',
+    'useful_inkleby.useful_django',
     'django.contrib.humanize',
     'bootstrapform',
-    'jsignature'
+    #'jsignature'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,8 +102,6 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 

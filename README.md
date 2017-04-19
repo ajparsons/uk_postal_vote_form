@@ -1,8 +1,16 @@
-# postal_vote
-rough code for postalvote app
+# uk_postal_vote_form
 
-powers http://postalvote.inkleby.com/
+Code for http://postalvote.inkleby.com/
 
-converts django form into offical pdf form
+Using OS Code Point Open + Democracy Club list of council ERO's creates a form that creates a printable PDF of a postal vote application form. 
 
-contains some in-progress framework stuff - will be tidied at some point. 
+Tested on Django 1.8.5 and 1.11. Python 2/3 compatible.
+
+To set up:
+
+1. Create a proj/config.py from proj/sampleconfig.py
+2. pip install -r requirements.txt
+3. manage.py migrate
+4. manage.py populate postalvote
+
+And run!
