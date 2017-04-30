@@ -2,7 +2,7 @@
 
 Code for http://postalvote.inkleby.com/
 
-Using OS Code Point Open + Democracy Club list of council ERO's creates a form that creates a printable PDF of a postal vote application form. 
+Using OS Code Point Open + Democracy Club list of council ERO's this creates a form that makes a printable PDF of a postal vote application form. 
 
 Tested on Django 1.8.5 and 1.11. Python 2/3 compatible.
 
