@@ -105,9 +105,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-SITE_NAME = "Sign Up for Postal Voting"
+SITE_NAME = "Postal Vote Helper"
 
-SITE_DESC = "Fill out postal vote application online"
+SITE_DESC = "A site to help you apply for a Postal Vote"
 
 SITE_TWITTER = "inkleby"
 
