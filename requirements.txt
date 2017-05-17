@@ -7,3 +7,4 @@ pyPdf2
 oscodepoint
 django-bootstrap-form
 unicodecsv
+django-import-export

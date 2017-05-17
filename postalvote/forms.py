@@ -1,12 +1,16 @@
 from django import forms
 from .models import Election , Postcode
 from django.forms.extras.widgets import SelectDateWidget
-
+from django.db.utils import OperationalError
 #from jsignature.forms import JSignatureField
 #from jsignature.utils import draw_signature
 #from jsignature.widgets import JSignatureWid#get
 
-valid_elections = Election.valid_elections()
+try:
+    valid_elections = Election.valid_elections()
+except OperationalError:
+    valid_elections = []
+    
 
 election_choices = ()
 """
